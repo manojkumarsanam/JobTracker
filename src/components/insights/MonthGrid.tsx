@@ -33,6 +33,12 @@ export default function MonthGrid({ counts }: Props) {
 
   const max = Math.max(1, ...cells.map((c) => c?.count ?? 0));
 
+  /** GitHub-contribution-style intensity: 0 (empty) through 4 (darkest). */
+  const level = (count: number): number => {
+    if (count === 0) return 0;
+    return Math.min(4, Math.max(1, Math.ceil((count / max) * 4)));
+  };
+
   return (
     <Card
       title="Monthly View"
@@ -56,15 +62,8 @@ export default function MonthGrid({ counts }: Props) {
           cell ? (
             <div
               key={cell.key}
-              className="month-cell"
-              title={`${cell.key}: ${cell.count}`}
-              style={{
-                background:
-                  cell.count === 0
-                    ? "var(--bg-inset)"
-                    : `color-mix(in srgb, var(--accent) ${20 + (cell.count / max) * 80}%, var(--bg-inset))`,
-                color: cell.count / max > 0.55 ? "#fff" : "var(--text-secondary)",
-              }}
+              className={`month-cell level-${level(cell.count)}`}
+              title={`${cell.key}: ${cell.count} application${cell.count === 1 ? "" : "s"}`}
             >
               {cell.day}
             </div>
@@ -72,6 +71,13 @@ export default function MonthGrid({ counts }: Props) {
             <div key={`pad-${i}`} />
           ),
         )}
+      </div>
+      <div className="month-legend">
+        <span>Less</span>
+        {[0, 1, 2, 3, 4].map((l) => (
+          <span key={l} className={`month-legend-swatch level-${l}`} />
+        ))}
+        <span>More</span>
       </div>
     </Card>
   );

@@ -4,14 +4,15 @@
  * set, the card shows required pace and on-track status.
  */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { forecast, type DayPoint } from "../../lib/analytics";
 import Card from "./Card";
 
 interface Props {
   series: DayPoint[];
   total: number;
-  goalCount: number | null;
+  /** Undefined while settings are still loading from the database. */
+  goalCount: number | null | undefined;
   goalDeadline: string | null;
   onSaveGoal: (count: number, deadline: string | null) => void;
 }
@@ -23,9 +24,26 @@ export default function ForecastCard({
   goalDeadline,
   onSaveGoal,
 }: Props) {
-  const [editing, setEditing] = useState(goalCount == null);
-  const [countInput, setCountInput] = useState(goalCount?.toString() ?? "");
-  const [deadlineInput, setDeadlineInput] = useState(goalDeadline ?? "");
+  const [editing, setEditing] = useState(false);
+  const [countInput, setCountInput] = useState("");
+  const [deadlineInput, setDeadlineInput] = useState("");
+
+  // Sync with the saved goal whenever it (re)loads: open the editor only
+  // when we know for sure no goal exists yet.
+  useEffect(() => {
+    if (goalCount === undefined) return;
+    setEditing(goalCount == null);
+    setCountInput(goalCount?.toString() ?? "");
+    setDeadlineInput(goalDeadline ?? "");
+  }, [goalCount, goalDeadline]);
+
+  if (goalCount === undefined) {
+    return (
+      <Card title="Forecast" subtitle="Loading…">
+        <p className="insight-empty">…</p>
+      </Card>
+    );
+  }
 
   const save = () => {
     const count = parseInt(countInput, 10);

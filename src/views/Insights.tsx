@@ -28,7 +28,9 @@ import "./Insights.css";
 export default function Insights() {
   const [apps, setApps] = useState<Application[]>([]);
   const [notes, setNotes] = useState<AnomalyNote[]>([]);
-  const [goalCount, setGoalCount] = useState<number | null>(null);
+  const [goalCount, setGoalCount] = useState<number | null | undefined>(
+    undefined,
+  );
   const [goalDeadline, setGoalDeadline] = useState<string | null>(null);
 
   const load = useCallback(() => {
