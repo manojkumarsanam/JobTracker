@@ -60,6 +60,8 @@ pub fn run() {
             commands::applications::update_application,
             commands::applications::delete_application,
             commands::applications::list_status_events,
+            commands::documents::import_pdf,
+            commands::documents::resolve_document_path,
             hotkeys::apply_hotkeys,
             hotkeys::close_popup,
         ])
