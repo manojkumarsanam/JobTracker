@@ -68,6 +68,8 @@ pub fn run() {
             commands::compile::compile_tex,
             commands::compile::read_document,
             commands::compile::save_pdf_as,
+            commands::anomalies::list_anomaly_notes,
+            commands::anomalies::save_anomaly_note,
             hotkeys::apply_hotkeys,
             hotkeys::close_popup,
         ])

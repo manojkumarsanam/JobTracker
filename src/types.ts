@@ -85,6 +85,14 @@ export interface StatusEvent {
   changed_at: string;
 }
 
+export interface AnomalyNote {
+  period_start: string;
+  period_type: string;
+  direction: string;
+  note: string;
+  created_at: string;
+}
+
 export interface SetupState {
   ready: boolean;
   data_dir: string | null;

@@ -2,6 +2,7 @@
 
 import { invoke } from "@tauri-apps/api/core";
 import type {
+  AnomalyNote,
   Application,
   FieldDefinition,
   SetupState,
@@ -53,6 +54,21 @@ export const api = {
   // Export
   exportCsv: (path: string) => invoke<void>("export_csv", { path }),
   exportXlsx: (path: string) => invoke<void>("export_xlsx", { path }),
+
+  // Anomaly annotations
+  listAnomalyNotes: () => invoke<AnomalyNote[]>("list_anomaly_notes"),
+  saveAnomalyNote: (
+    periodStart: string,
+    periodType: string,
+    direction: string,
+    note: string,
+  ) =>
+    invoke<void>("save_anomaly_note", {
+      periodStart,
+      periodType,
+      direction,
+      note,
+    }),
 
   // Hotkeys / windows
   applyHotkeys: (add: string, dashboard: string) =>

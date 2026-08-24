@@ -1,3 +1,4 @@
+pub mod anomalies;
 pub mod applications;
 pub mod compile;
 pub mod documents;
