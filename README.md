@@ -27,6 +27,7 @@ Applying to jobs means customizing a resume and cover letter for every posting, 
   - Offline world map of where you're applying
   - Anomaly detection: unusual spikes or drops get flagged, and your explanation is saved with the data
 - **Export** — CSV or Excel, one click, including every custom field you ever used.
+- **Local AI assistant (optional)** — connect your own [Ollama](https://ollama.com) and ask questions about your data in plain language ("which portal responds the most?"). The assistant is locked to your application data — the system prompt is compiled into the app, can't be changed, and refuses anything off-topic. Your data goes only to the Ollama URL you configure (normally localhost), nowhere else.
 - **Private by design** — one SQLite database in a folder you choose. No accounts, no telemetry, no network calls. Move the folder and your data moves with it.
 
 ## Install

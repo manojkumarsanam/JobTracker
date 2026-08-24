@@ -70,6 +70,11 @@ export const api = {
       note,
     }),
 
+  // Ollama assistant
+  ollamaModels: (url: string) => invoke<string[]>("ollama_models", { url }),
+  ollamaAsk: (url: string, model: string, question: string) =>
+    invoke<string>("ollama_ask", { url, model, question }),
+
   // Hotkeys / windows
   applyHotkeys: (add: string, dashboard: string) =>
     invoke<void>("apply_hotkeys", { add, dashboard }),

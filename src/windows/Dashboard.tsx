@@ -8,11 +8,12 @@ import { api } from "../api";
 import SetupWizard from "../views/SetupWizard";
 import ThemeToggle from "../components/ThemeToggle";
 import Applications from "../views/Applications";
+import Assistant from "../views/Assistant";
 import Insights from "../views/Insights";
 import Settings from "../views/Settings";
 import "./Dashboard.css";
 
-type Tab = "insights" | "applications" | "settings";
+type Tab = "insights" | "applications" | "assistant" | "settings";
 
 export default function Dashboard() {
   const [ready, setReady] = useState<boolean | null>(null);
@@ -42,6 +43,7 @@ export default function Dashboard() {
             [
               ["insights", "Insights"],
               ["applications", "Applications"],
+              ["assistant", "Assistant"],
               ["settings", "Settings"],
             ] as [Tab, string][]
           ).map(([key, label]) => (
@@ -60,6 +62,7 @@ export default function Dashboard() {
       <main className="dashboard-main">
         {tab === "insights" && <Insights />}
         {tab === "applications" && <Applications />}
+        {tab === "assistant" && <Assistant />}
         {tab === "settings" && <Settings />}
       </main>
     </div>
