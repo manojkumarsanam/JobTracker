@@ -62,6 +62,8 @@ pub fn run() {
             commands::applications::list_status_events,
             commands::documents::import_pdf,
             commands::documents::resolve_document_path,
+            commands::export::export_csv,
+            commands::export::export_xlsx,
             hotkeys::apply_hotkeys,
             hotkeys::close_popup,
         ])

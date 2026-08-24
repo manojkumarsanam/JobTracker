@@ -42,6 +42,10 @@ export const api = {
   resolveDocumentPath: (relative: string) =>
     invoke<string>("resolve_document_path", { relative }),
 
+  // Export
+  exportCsv: (path: string) => invoke<void>("export_csv", { path }),
+  exportXlsx: (path: string) => invoke<void>("export_xlsx", { path }),
+
   // Hotkeys / windows
   applyHotkeys: (add: string, dashboard: string) =>
     invoke<void>("apply_hotkeys", { add, dashboard }),
