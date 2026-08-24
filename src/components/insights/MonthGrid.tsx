@@ -31,12 +31,13 @@ export default function MonthGrid({ counts }: Props) {
     return { label, cells, total };
   }, [offset, counts]);
 
-  const max = Math.max(1, ...cells.map((c) => c?.count ?? 0));
-
-  /** GitHub-contribution-style intensity: 0 (empty) through 4 (darkest). */
+  /**
+   * GitHub-contribution-style intensity on a fixed scale, so one busy day
+   * doesn't wash out the rest: 1-5 → light, 6-10, 11-15, 16+ → darkest.
+   */
   const level = (count: number): number => {
     if (count === 0) return 0;
-    return Math.min(4, Math.max(1, Math.ceil((count / max) * 4)));
+    return Math.min(4, Math.ceil(count / 5));
   };
 
   return (
