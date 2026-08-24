@@ -96,7 +96,7 @@
   font-weight: 600;
 }
 
-.cell-docs span {
+.cell-docs button {
   display: inline-grid;
   place-items: center;
   width: 20px;
@@ -162,4 +162,15 @@
   justify-content: flex-end;
   gap: 10px;
   margin-top: 8px;
+}
+
+.cell-docs button {
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.cell-docs button:hover {
+  background: var(--accent);
+  color: #fff;
 }

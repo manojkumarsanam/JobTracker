@@ -42,6 +42,14 @@ export const api = {
   resolveDocumentPath: (relative: string) =>
     invoke<string>("resolve_document_path", { relative }),
 
+  // Compilation & document bytes
+  texEngineAvailable: () => invoke<boolean>("tex_engine_available"),
+  compileTex: (tex: string) => invoke<number[]>("compile_tex", { tex }),
+  readDocument: (relative: string) =>
+    invoke<number[]>("read_document", { relative }),
+  savePdfAs: (path: string, bytes: number[]) =>
+    invoke<void>("save_pdf_as", { path, bytes }),
+
   // Export
   exportCsv: (path: string) => invoke<void>("export_csv", { path }),
   exportXlsx: (path: string) => invoke<void>("export_xlsx", { path }),

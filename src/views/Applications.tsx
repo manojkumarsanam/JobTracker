@@ -12,6 +12,7 @@ import DynamicForm, {
   valuesFromApplication,
   type FormValues,
 } from "../components/DynamicForm";
+import DocumentViewer, { type DocSlot } from "../components/DocumentViewer";
 import type { Application, FieldDefinition, Status } from "../types";
 import "./Applications.css";
 
@@ -34,6 +35,9 @@ export default function Applications() {
   const [editing, setEditing] = useState<Application | null>(null);
   const [editValues, setEditValues] = useState<FormValues | null>(null);
   const [notice, setNotice] = useState("");
+  const [viewing, setViewing] = useState<{ app: Application; slot: DocSlot } | null>(
+    null,
+  );
 
   const load = useCallback(() => {
     api.listApplications().then(setApps).catch((e) => setNotice(String(e)));
@@ -171,8 +175,22 @@ export default function Applications() {
                     />
                   </td>
                   <td className="cell-docs">
-                    {app.resume_kind && <span title="Resume attached">R</span>}
-                    {app.cover_kind && <span title="Cover letter attached">C</span>}
+                    {app.resume_kind && (
+                      <button
+                        title="View resume"
+                        onClick={() => setViewing({ app, slot: "resume" })}
+                      >
+                        R
+                      </button>
+                    )}
+                    {app.cover_kind && (
+                      <button
+                        title="View cover letter"
+                        onClick={() => setViewing({ app, slot: "cover" })}
+                      >
+                        C
+                      </button>
+                    )}
                   </td>
                   <td className="cell-actions">
                     <button onClick={() => startEdit(app)}>Edit</button>
@@ -185,6 +203,14 @@ export default function Applications() {
             </tbody>
           </table>
         </div>
+      )}
+
+      {viewing && (
+        <DocumentViewer
+          app={viewing.app}
+          slot={viewing.slot}
+          onClose={() => setViewing(null)}
+        />
       )}
 
       {editing && editValues && (

@@ -64,6 +64,10 @@ pub fn run() {
             commands::documents::resolve_document_path,
             commands::export::export_csv,
             commands::export::export_xlsx,
+            commands::compile::tex_engine_available,
+            commands::compile::compile_tex,
+            commands::compile::read_document,
+            commands::compile::save_pdf_as,
             hotkeys::apply_hotkeys,
             hotkeys::close_popup,
         ])
