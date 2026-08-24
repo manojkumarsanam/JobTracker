@@ -44,8 +44,91 @@
   padding: 10px 14px;
   border-radius: var(--radius-lg);
   font-size: 13px;
-  white-space: pre-wrap;
   user-select: text;
+}
+
+.assistant-msg.user {
+  white-space: pre-wrap;
+}
+
+/* Rendered markdown inside assistant replies */
+
+.assistant-msg.assistant p,
+.assistant-msg.assistant ul,
+.assistant-msg.assistant ol,
+.assistant-msg.assistant table,
+.assistant-msg.assistant blockquote {
+  margin: 0 0 8px;
+}
+
+.assistant-msg.assistant > :last-child {
+  margin-bottom: 0;
+}
+
+.assistant-msg.assistant ul,
+.assistant-msg.assistant ol {
+  padding-left: 20px;
+}
+
+.assistant-msg.assistant li {
+  margin-bottom: 2px;
+}
+
+.assistant-msg.assistant h1,
+.assistant-msg.assistant h2,
+.assistant-msg.assistant h3,
+.assistant-msg.assistant h4 {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 10px 0 4px;
+}
+
+.assistant-msg.assistant > h1:first-child,
+.assistant-msg.assistant > h2:first-child,
+.assistant-msg.assistant > h3:first-child {
+  margin-top: 0;
+}
+
+.assistant-msg.assistant code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  background: var(--bg-inset);
+  border-radius: 4px;
+  padding: 1px 5px;
+}
+
+.assistant-msg.assistant pre {
+  background: var(--bg-inset);
+  border-radius: var(--radius-sm);
+  padding: 10px;
+  overflow-x: auto;
+  margin: 0 0 8px;
+}
+
+.assistant-msg.assistant pre code {
+  background: none;
+  padding: 0;
+}
+
+.assistant-msg.assistant table {
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.assistant-msg.assistant th,
+.assistant-msg.assistant td {
+  border: 1px solid var(--border);
+  padding: 4px 8px;
+  text-align: left;
+}
+
+.assistant-msg.assistant th {
+  background: var(--bg-inset);
+  font-weight: 600;
+}
+
+.assistant-msg.assistant strong {
+  font-weight: 600;
 }
 
 .assistant-msg.user {

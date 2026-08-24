@@ -8,6 +8,8 @@
  */
 
 import { useEffect, useRef, useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { api } from "../api";
 import "./Assistant.css";
 
@@ -182,7 +184,13 @@ export default function Assistant() {
         )}
         {chat.map((entry, i) => (
           <div key={i} className={`assistant-msg ${entry.role}`}>
-            {entry.text}
+            {entry.role === "assistant" ? (
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {entry.text}
+              </ReactMarkdown>
+            ) : (
+              entry.text
+            )}
           </div>
         ))}
         {busy && <div className="assistant-msg assistant-thinking">Thinking…</div>}
