@@ -6,6 +6,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { api } from "../api";
 import SetupWizard from "../views/SetupWizard";
+import ThemeToggle from "../components/ThemeToggle";
 import Applications from "../views/Applications";
 import Insights from "../views/Insights";
 import Settings from "../views/Settings";
@@ -54,6 +55,7 @@ export default function Dashboard() {
           ))}
         </div>
         <span className="dashboard-credit">by MJKR</span>
+        <ThemeToggle />
       </nav>
       <main className="dashboard-main">
         {tab === "insights" && <Insights />}

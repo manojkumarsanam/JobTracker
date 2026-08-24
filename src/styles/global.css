@@ -1,24 +1,36 @@
-/* Design tokens and base styles. Light theme on :root, dark via media query. */
+/*
+ * Design tokens and base styles.
+ *
+ * Theme model: light palette on :root; dark overrides apply when the user
+ * chose dark (data-theme="dark") or when the OS prefers dark and the user
+ * hasn't explicitly chosen light. The in-app toggle wins in both directions.
+ */
 
 :root {
-  --bg: #f6f6f8;
+  --bg: #f4f4f7;
   --bg-elevated: #ffffff;
-  --bg-inset: #ededf1;
-  --text: #1b1b1f;
-  --text-secondary: #5c5c66;
-  --text-faint: #8e8e98;
-  --border: #dcdce2;
-  --border-strong: #c4c4cc;
-  --accent: #4f63c2;
-  --accent-hover: #4356ad;
-  --accent-soft: #e6e9f8;
-  --danger: #c04848;
-  --success: #3d9a50;
-  --warning: #c9a227;
-  --shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.12), 0 12px 40px rgba(0, 0, 0, 0.12);
-  --radius: 8px;
-  --radius-lg: 12px;
+  --bg-inset: #eaeaef;
+  --text: #1c1c22;
+  --text-secondary: #5d5d68;
+  --text-faint: #90909b;
+  --border: #e2e2e9;
+  --border-strong: #c9c9d2;
+  --accent: #5b6ee8;
+  --accent-hover: #4a5cd6;
+  --accent-soft: #eceefc;
+  --accent-glow: rgba(91, 110, 232, 0.25);
+  --danger: #d05252;
+  --success: #3f9e55;
+  --warning: #cfa62c;
+  --shadow:
+    0 1px 2px rgba(23, 23, 40, 0.05),
+    0 3px 10px rgba(23, 23, 40, 0.05);
+  --shadow-lg:
+    0 2px 6px rgba(23, 23, 40, 0.08),
+    0 16px 48px rgba(23, 23, 40, 0.16);
+  --radius-sm: 8px;
+  --radius: 10px;
+  --radius-lg: 16px;
   --font:
     -apple-system, BlinkMacSystemFont, "Segoe UI Variable", "Segoe UI", Roboto,
     Helvetica, Arial, sans-serif;
@@ -27,21 +39,51 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #17171b;
-    --bg-elevated: #202027;
-    --bg-inset: #101014;
-    --text: #ececf1;
-    --text-secondary: #a5a5b0;
-    --text-faint: #6e6e7a;
-    --border: #32323c;
-    --border-strong: #45454f;
-    --accent: #7285d8;
-    --accent-hover: #8496e2;
-    --accent-soft: #262a40;
-    --shadow: 0 1px 3px rgba(0, 0, 0, 0.4), 0 4px 16px rgba(0, 0, 0, 0.3);
-    --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.5), 0 12px 40px rgba(0, 0, 0, 0.5);
+  :root:not([data-theme="light"]) {
+    --bg: #141419;
+    --bg-elevated: #1e1e26;
+    --bg-inset: #0e0e13;
+    --text: #ededf2;
+    --text-secondary: #a8a8b4;
+    --text-faint: #70707c;
+    --border: #2d2d38;
+    --border-strong: #42424e;
+    --accent: #7b8cf0;
+    --accent-hover: #8d9cf4;
+    --accent-soft: #262a45;
+    --accent-glow: rgba(123, 140, 240, 0.3);
+    --danger: #e06666;
+    --success: #4fae65;
+    --shadow:
+      0 1px 2px rgba(0, 0, 0, 0.35),
+      0 3px 10px rgba(0, 0, 0, 0.28);
+    --shadow-lg:
+      0 2px 6px rgba(0, 0, 0, 0.4),
+      0 16px 48px rgba(0, 0, 0, 0.55);
   }
+}
+
+:root[data-theme="dark"] {
+  --bg: #141419;
+  --bg-elevated: #1e1e26;
+  --bg-inset: #0e0e13;
+  --text: #ededf2;
+  --text-secondary: #a8a8b4;
+  --text-faint: #70707c;
+  --border: #2d2d38;
+  --border-strong: #42424e;
+  --accent: #7b8cf0;
+  --accent-hover: #8d9cf4;
+  --accent-soft: #262a45;
+  --accent-glow: rgba(123, 140, 240, 0.3);
+  --danger: #e06666;
+  --success: #4fae65;
+  --shadow:
+    0 1px 2px rgba(0, 0, 0, 0.35),
+    0 3px 10px rgba(0, 0, 0, 0.28);
+  --shadow-lg:
+    0 2px 6px rgba(0, 0, 0, 0.4),
+    0 16px 48px rgba(0, 0, 0, 0.55);
 }
 
 * {
@@ -65,6 +107,7 @@ body {
   -webkit-font-smoothing: antialiased;
   user-select: none;
   cursor: default;
+  transition: background 200ms ease, color 200ms ease;
 }
 
 input,
@@ -77,15 +120,16 @@ select {
   background: var(--bg-elevated);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 7px 10px;
+  padding: 8px 11px;
   outline: none;
-  transition: border-color 120ms ease;
+  transition: border-color 140ms ease, box-shadow 140ms ease;
 }
 
 input:focus,
 textarea:focus,
 select:focus {
   border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
 }
 
 textarea {
@@ -103,20 +147,27 @@ button {
   cursor: pointer;
   color: var(--text);
   background: var(--bg-inset);
-  transition: background 120ms ease, opacity 120ms ease;
+  transition: background 140ms ease, opacity 140ms ease,
+    transform 100ms ease, box-shadow 140ms ease;
 }
 
 button:hover {
   background: var(--border);
 }
 
+button:active {
+  transform: scale(0.97);
+}
+
 button.primary {
   color: #fff;
   background: var(--accent);
+  box-shadow: 0 1px 2px var(--accent-glow);
 }
 
 button.primary:hover {
   background: var(--accent-hover);
+  box-shadow: 0 2px 8px var(--accent-glow);
 }
 
 button.danger {
@@ -127,6 +178,7 @@ button.danger {
 button:disabled {
   opacity: 0.5;
   cursor: default;
+  transform: none;
 }
 
 label {

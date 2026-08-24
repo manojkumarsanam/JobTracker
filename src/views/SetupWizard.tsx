@@ -7,6 +7,7 @@
 import { useState } from "react";
 import { open } from "@tauri-apps/plugin-dialog";
 import { api } from "../api";
+import ThemeToggle from "../components/ThemeToggle";
 import type { DocKind } from "../types";
 import "./SetupWizard.css";
 
@@ -50,6 +51,9 @@ export default function SetupWizard({ onComplete }: Props) {
 
   return (
     <div className="setup">
+      <div className="setup-theme-toggle">
+        <ThemeToggle />
+      </div>
       <div className="setup-card">
         {step === 0 && (
           <>

@@ -7,9 +7,10 @@
 .dashboard-nav {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 20px;
   padding: 10px 18px;
-  background: var(--bg-elevated);
+  background: color-mix(in srgb, var(--bg-elevated) 88%, transparent);
+  backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
 }
@@ -23,13 +24,14 @@
 .dashboard-logo {
   display: grid;
   place-items: center;
-  width: 26px;
-  height: 26px;
-  border-radius: 7px;
-  background: var(--accent);
+  width: 27px;
+  height: 27px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
   color: #fff;
   font-size: 11px;
   font-weight: 700;
+  box-shadow: 0 2px 6px var(--accent-glow);
 }
 
 .dashboard-name {
@@ -45,7 +47,8 @@
 .dashboard-tab {
   background: none;
   color: var(--text-secondary);
-  padding: 6px 12px;
+  padding: 6px 14px;
+  border-radius: 999px;
 }
 
 .dashboard-tab:hover {
@@ -53,8 +56,8 @@
 }
 
 .dashboard-tab.active {
-  color: var(--text);
-  background: var(--bg-inset);
+  color: var(--accent);
+  background: var(--accent-soft);
   font-weight: 600;
 }
 
