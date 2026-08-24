@@ -5,6 +5,8 @@ mod hotkeys;
 
 use db::Db;
 use std::sync::Mutex;
+use tauri::menu::{Menu, MenuItem};
+use tauri::tray::TrayIconBuilder;
 use tauri::Manager;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -45,7 +47,37 @@ pub fn run() {
             }
 
             app.manage(Db(Mutex::new(conn)));
+
+            // Tray icon so the app stays reachable while backgrounded —
+            // closing the dashboard hides it, and the global hotkeys keep
+            // working until the user explicitly quits.
+            let open = MenuItem::with_id(app, "open", "Open Dashboard", true, None::<&str>)?;
+            let add = MenuItem::with_id(app, "add", "Add Application", true, None::<&str>)?;
+            let quit = MenuItem::with_id(app, "quit", "Quit Job Tracker", true, None::<&str>)?;
+            let menu = Menu::with_items(app, &[&open, &add, &quit])?;
+            TrayIconBuilder::new()
+                .icon(app.default_window_icon().unwrap().clone())
+                .menu(&menu)
+                .show_menu_on_left_click(true)
+                .on_menu_event(|app, event| match event.id.as_ref() {
+                    "open" => hotkeys::show_dashboard(app),
+                    "add" => hotkeys::show_popup(app),
+                    "quit" => app.exit(0),
+                    _ => {}
+                })
+                .build(app)?;
+
             Ok(())
+        })
+        .on_window_event(|window, event| {
+            // Closing the dashboard hides it instead of quitting, so the
+            // hotkeys stay live. Quit comes from the tray menu.
+            if window.label() == "main" {
+                if let tauri::WindowEvent::CloseRequested { api, .. } = event {
+                    api.prevent_close();
+                    let _ = window.hide();
+                }
+            }
         })
         .invoke_handler(tauri::generate_handler![
             commands::setup::get_setup_state,
