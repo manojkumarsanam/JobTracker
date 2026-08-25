@@ -396,7 +396,9 @@
           <h3> macOS</h3>
           <ol>
             <li>Download the <code>.dmg</code> and drag <b>Job Tracker</b> into Applications.</li>
-            <li>First launch: right-click the app → <b>Open</b> → <b>Open</b>. (Or allow it under System Settings → Privacy &amp; Security.) Needed once only.</li>
+            <li>First launch, macOS will say it can't verify the app — this is expected for a free open-source app without a paid Apple certificate. Right-click the app → <b>Open</b> → <b>Open</b>.</li>
+            <li>Still blocked? Open <b>System Settings → Privacy &amp; Security</b>, scroll to the Security section, and click <b>Open Anyway</b> next to Job Tracker.</li>
+            <li>Still nothing? Run <code>xattr -cr "/Applications/Job Tracker.app"</code> in Terminal, then open it normally.</li>
             <li>Optional, for .tex previews: <code>brew install tectonic</code></li>
           </ol>
         </div>
