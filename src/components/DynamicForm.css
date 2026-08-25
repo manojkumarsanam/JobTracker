@@ -1,0 +1,15 @@
+.dynamic-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form-field input:not([type="checkbox"]),
+.form-field textarea,
+.form-field select {
+  width: 100%;
+}
+
+.required-mark {
+  color: var(--danger);
+}

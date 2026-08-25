@@ -1,0 +1,88 @@
+.doc-attach {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.doc-attach-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.doc-attach-toggle {
+  background: none;
+  padding: 0;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.doc-attach-toggle:hover {
+  background: none;
+  color: var(--accent);
+}
+
+.chevron {
+  display: inline-block;
+  transition: transform 120ms ease;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.chevron.open {
+  transform: rotate(90deg);
+}
+
+.doc-attached-badge {
+  font-size: 11px;
+  color: var(--success);
+  background: color-mix(in srgb, var(--success) 12%, transparent);
+  border-radius: 999px;
+  padding: 1px 8px;
+}
+
+.doc-mode-switch {
+  display: flex;
+  gap: 2px;
+  background: var(--bg-inset);
+  border-radius: var(--radius);
+  padding: 2px;
+}
+
+.doc-mode-switch button {
+  padding: 3px 10px;
+  font-size: 12px;
+  background: none;
+}
+
+.doc-mode-switch button.active {
+  background: var(--bg-elevated);
+  box-shadow: var(--shadow);
+}
+
+.tex-input {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  min-height: 100px;
+}
+
+.pdf-picker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.pdf-name {
+  font-size: 12px;
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

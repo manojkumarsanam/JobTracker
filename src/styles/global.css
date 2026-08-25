@@ -1,0 +1,206 @@
+/*
+ * Design tokens and base styles.
+ *
+ * Theme model: light palette on :root; dark overrides apply when the user
+ * chose dark (data-theme="dark") or when the OS prefers dark and the user
+ * hasn't explicitly chosen light. The in-app toggle wins in both directions.
+ */
+
+:root {
+  --bg: #f4f4f7;
+  --bg-elevated: #ffffff;
+  --bg-inset: #eaeaef;
+  --text: #1c1c22;
+  --text-secondary: #5d5d68;
+  --text-faint: #90909b;
+  --border: #e2e2e9;
+  --border-strong: #c9c9d2;
+  --accent: #5b6ee8;
+  --accent-hover: #4a5cd6;
+  --accent-soft: #eceefc;
+  --accent-glow: rgba(91, 110, 232, 0.25);
+  --danger: #d05252;
+  --success: #3f9e55;
+  --warning: #cfa62c;
+  --shadow:
+    0 1px 2px rgba(23, 23, 40, 0.05),
+    0 3px 10px rgba(23, 23, 40, 0.05);
+  --shadow-lg:
+    0 2px 6px rgba(23, 23, 40, 0.08),
+    0 16px 48px rgba(23, 23, 40, 0.16);
+  --radius-sm: 8px;
+  --radius: 10px;
+  --radius-lg: 16px;
+  --font:
+    -apple-system, BlinkMacSystemFont, "Segoe UI Variable", "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas,
+    monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141419;
+    --bg-elevated: #1e1e26;
+    --bg-inset: #0e0e13;
+    --text: #ededf2;
+    --text-secondary: #a8a8b4;
+    --text-faint: #70707c;
+    --border: #2d2d38;
+    --border-strong: #42424e;
+    --accent: #7b8cf0;
+    --accent-hover: #8d9cf4;
+    --accent-soft: #262a45;
+    --accent-glow: rgba(123, 140, 240, 0.3);
+    --danger: #e06666;
+    --success: #4fae65;
+    --shadow:
+      0 1px 2px rgba(0, 0, 0, 0.35),
+      0 3px 10px rgba(0, 0, 0, 0.28);
+    --shadow-lg:
+      0 2px 6px rgba(0, 0, 0, 0.4),
+      0 16px 48px rgba(0, 0, 0, 0.55);
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #141419;
+  --bg-elevated: #1e1e26;
+  --bg-inset: #0e0e13;
+  --text: #ededf2;
+  --text-secondary: #a8a8b4;
+  --text-faint: #70707c;
+  --border: #2d2d38;
+  --border-strong: #42424e;
+  --accent: #7b8cf0;
+  --accent-hover: #8d9cf4;
+  --accent-soft: #262a45;
+  --accent-glow: rgba(123, 140, 240, 0.3);
+  --danger: #e06666;
+  --success: #4fae65;
+  --shadow:
+    0 1px 2px rgba(0, 0, 0, 0.35),
+    0 3px 10px rgba(0, 0, 0, 0.28);
+  --shadow-lg:
+    0 2px 6px rgba(0, 0, 0, 0.4),
+    0 16px 48px rgba(0, 0, 0, 0.55);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  font-family: var(--font);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+  cursor: default;
+  transition: background 200ms ease, color 200ms ease;
+}
+
+input,
+textarea,
+select {
+  user-select: text;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--text);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 8px 11px;
+  outline: none;
+  transition: border-color 140ms ease, box-shadow 140ms ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 64px;
+}
+
+button {
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  border: none;
+  border-radius: var(--radius);
+  padding: 8px 14px;
+  cursor: pointer;
+  color: var(--text);
+  background: var(--bg-inset);
+  transition: background 140ms ease, opacity 140ms ease,
+    transform 100ms ease, box-shadow 140ms ease;
+}
+
+button:hover {
+  background: var(--border);
+}
+
+button:active {
+  transform: scale(0.97);
+}
+
+button.primary {
+  color: #fff;
+  background: var(--accent);
+  box-shadow: 0 1px 2px var(--accent-glow);
+}
+
+button.primary:hover {
+  background: var(--accent-hover);
+  box-shadow: 0 2px 8px var(--accent-glow);
+}
+
+button.danger {
+  color: #fff;
+  background: var(--danger);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: default;
+  transform: none;
+}
+
+label {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 5px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
