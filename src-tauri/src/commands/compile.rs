@@ -3,11 +3,22 @@
 //! The engine is resolved in order:
 //! 1. a `tectonic` binary bundled next to the app executable (release builds)
 //! 2. `tectonic` on the user's PATH (dev builds, or a user install)
+//! 3. well-known install locations (Homebrew, MacPorts, winget) — GUI apps
+//!    launched from Finder/Dock/Start Menu don't inherit a login shell's
+//!    PATH, so a brew/winget install can be invisible to step 2 even
+//!    though it works fine from a terminal
 //!
 //! Compilation happens in a temp dir; only the PDF bytes leave it.
 
 use std::path::PathBuf;
 use std::process::Command;
+
+/// Common install locations not guaranteed to be on a GUI app's PATH.
+const KNOWN_LOCATIONS: &[&str] = &[
+    "/opt/homebrew/bin/tectonic", // Homebrew on Apple Silicon
+    "/usr/local/bin/tectonic",    // Homebrew on Intel Macs, common on Linux
+    "/opt/local/bin/tectonic",    // MacPorts
+];
 
 fn tectonic_binary() -> Option<PathBuf> {
     // Bundled sidecar (same directory as the app binary).
@@ -26,12 +37,22 @@ fn tectonic_binary() -> Option<PathBuf> {
     }
     // PATH lookup.
     let finder = if cfg!(windows) { "where" } else { "which" };
-    let output = Command::new(finder).arg("tectonic").output().ok()?;
-    if output.status.success() {
-        let path = String::from_utf8_lossy(&output.stdout);
-        let first = path.lines().next()?.trim();
-        if !first.is_empty() {
-            return Some(PathBuf::from(first));
+    if let Ok(output) = Command::new(finder).arg("tectonic").output() {
+        if output.status.success() {
+            let path = String::from_utf8_lossy(&output.stdout);
+            if let Some(first) = path.lines().next().map(str::trim) {
+                if !first.is_empty() {
+                    return Some(PathBuf::from(first));
+                }
+            }
+        }
+    }
+    // Known install locations, for GUI launches that don't inherit a
+    // login shell's PATH.
+    for path in KNOWN_LOCATIONS {
+        let candidate = PathBuf::from(path);
+        if candidate.exists() {
+            return Some(candidate);
         }
     }
     None

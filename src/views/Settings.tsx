@@ -294,8 +294,11 @@ export default function Settings() {
                 ? "…"
                 : texAvailable
                   ? "Tectonic found — .tex previews will compile"
-                  : "Not found — install Tectonic (brew install tectonic) to preview .tex"}
+                  : "Not found. If you just installed Tectonic, fully quit and reopen Job Tracker (not just close the window), then recheck below."}
             </p>
+            <button onClick={() => api.texEngineAvailable().then(setTexAvailable)}>
+              Recheck
+            </button>
           </div>
         </div>
       </section>
