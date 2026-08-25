@@ -102,6 +102,8 @@ pub fn run() {
             commands::compile::save_pdf_as,
             commands::assistant::ollama_models,
             commands::assistant::ollama_ask,
+            commands::import::parse_import_file,
+            commands::import::import_applications,
             commands::anomalies::list_anomaly_notes,
             commands::anomalies::save_anomaly_note,
             hotkeys::apply_hotkeys,

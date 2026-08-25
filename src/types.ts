@@ -85,6 +85,35 @@ export interface StatusEvent {
   changed_at: string;
 }
 
+export interface ParsedTable {
+  headers: string[];
+  rows: string[][];
+}
+
+export interface ImportRow {
+  created_at: string;
+  company?: string;
+  role?: string;
+  job_id?: string;
+  portal?: string;
+  location?: string;
+  address_used?: string;
+  phone?: string;
+  salary_expectation?: string;
+  notes?: string;
+  status?: Status;
+  extra?: Record<string, unknown>;
+  resume_source_path?: string;
+  cover_source_path?: string;
+  replace_id?: number;
+}
+
+export interface ImportSummary {
+  inserted: number;
+  replaced: number;
+  errors: string[];
+}
+
 export interface AnomalyNote {
   period_start: string;
   period_type: string;

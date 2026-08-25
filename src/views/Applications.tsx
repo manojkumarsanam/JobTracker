@@ -11,6 +11,7 @@ import StatusBadge from "../components/StatusBadge";
 import DynamicForm from "../components/DynamicForm";
 import { valuesFromApplication, type FormValues } from "../lib/form";
 import DocumentViewer, { type DocSlot } from "../components/DocumentViewer";
+import ImportWizard from "../components/ImportWizard";
 import type { Application, FieldDefinition, Status } from "../types";
 import "./Applications.css";
 
@@ -36,6 +37,7 @@ export default function Applications() {
   const [viewing, setViewing] = useState<{ app: Application; slot: DocSlot } | null>(
     null,
   );
+  const [importing, setImporting] = useState(false);
 
   const load = useCallback(() => {
     api.listApplications().then(setApps).catch((e) => setNotice(String(e)));
@@ -126,6 +128,7 @@ export default function Applications() {
         <span className="apps-count">
           {filtered.length} of {apps.length}
         </span>
+        <button onClick={() => setImporting(true)}>Import</button>
         <button onClick={() => doExport("csv")}>Export CSV</button>
         <button onClick={() => doExport("xlsx")}>Export Excel</button>
       </div>
@@ -233,6 +236,16 @@ export default function Applications() {
             </div>
           </div>
         </div>
+      )}
+
+      {importing && (
+        <ImportWizard
+          fields={fields}
+          existingApps={apps}
+          onFieldsChanged={load}
+          onImported={load}
+          onClose={() => setImporting(false)}
+        />
       )}
     </div>
   );

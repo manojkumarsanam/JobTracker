@@ -30,4 +30,6 @@ chrono = { version = "0.4.45", features = ["serde"] }
 dirs = "6"
 rust_xlsxwriter = "0.99.0"
 reqwest = { version = "0.13.4", default-features = false, features = ["json"] }
+calamine = { version = "0.36.1", features = ["chrono"] }
+csv = "1.4.0"
 

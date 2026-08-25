@@ -5,5 +5,6 @@ pub mod compile;
 pub mod documents;
 pub mod export;
 pub mod fields;
+pub mod import;
 pub mod settings;
 pub mod setup;

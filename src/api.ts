@@ -5,6 +5,9 @@ import type {
   AnomalyNote,
   Application,
   FieldDefinition,
+  ImportRow,
+  ImportSummary,
+  ParsedTable,
   SetupState,
   Status,
   StatusEvent,
@@ -54,6 +57,11 @@ export const api = {
   // Export
   exportCsv: (path: string) => invoke<void>("export_csv", { path }),
   exportXlsx: (path: string) => invoke<void>("export_xlsx", { path }),
+
+  // Import
+  parseImportFile: (path: string) => invoke<ParsedTable>("parse_import_file", { path }),
+  importApplications: (rows: ImportRow[]) =>
+    invoke<ImportSummary>("import_applications", { rows }),
 
   // Anomaly annotations
   listAnomalyNotes: () => invoke<AnomalyNote[]>("list_anomaly_notes"),
