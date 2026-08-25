@@ -7,6 +7,7 @@
 import { useState } from "react";
 import { open } from "@tauri-apps/plugin-dialog";
 import { api } from "../api";
+import HotkeyRecorder from "../components/HotkeyRecorder";
 import ThemeToggle from "../components/ThemeToggle";
 import type { DocKind } from "../types";
 import "./SetupWizard.css";
@@ -135,23 +136,18 @@ export default function SetupWizard({ onComplete }: Props) {
           <>
             <h2>Global hotkeys</h2>
             <p className="setup-help">
-              These work from anywhere, even while the app is in the
-              background. You can change them later in Settings.
+              Click a box, then press the key combo you want. These work
+              from anywhere, even while the app is in the background — and
+              you can change them later in Settings.
             </p>
             <div className="setup-hotkeys">
               <div>
                 <label>Add application</label>
-                <input
-                  value={hotkeyAdd}
-                  onChange={(e) => setHotkeyAdd(e.target.value)}
-                />
+                <HotkeyRecorder value={hotkeyAdd} onChange={setHotkeyAdd} />
               </div>
               <div>
                 <label>Open dashboard</label>
-                <input
-                  value={hotkeyDash}
-                  onChange={(e) => setHotkeyDash(e.target.value)}
-                />
+                <HotkeyRecorder value={hotkeyDash} onChange={setHotkeyDash} />
               </div>
             </div>
             {error && <p className="setup-error">{error}</p>}

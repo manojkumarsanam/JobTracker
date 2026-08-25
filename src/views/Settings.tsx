@@ -6,6 +6,7 @@
 
 import { useEffect, useState } from "react";
 import { api } from "../api";
+import HotkeyRecorder from "../components/HotkeyRecorder";
 import {
   parseOptions,
   type DocKind,
@@ -243,22 +244,15 @@ export default function Settings() {
         <div className="settings-grid">
           <div>
             <label>Add application</label>
-            <input
-              value={hotkeyAdd}
-              onChange={(e) => setHotkeyAdd(e.target.value)}
-            />
+            <HotkeyRecorder value={hotkeyAdd} onChange={setHotkeyAdd} />
           </div>
           <div>
             <label>Open dashboard</label>
-            <input
-              value={hotkeyDash}
-              onChange={(e) => setHotkeyDash(e.target.value)}
-            />
+            <HotkeyRecorder value={hotkeyDash} onChange={setHotkeyDash} />
           </div>
         </div>
         <p className="settings-help">
-          Format: modifiers joined with +, e.g. <code>Alt+Shift+J</code> or{" "}
-          <code>CmdOrCtrl+Shift+Space</code>.
+          Click a box, then press the key combo you want to use.
         </p>
         <div className="settings-actions">
           <button className="primary" onClick={saveHotkeys}>

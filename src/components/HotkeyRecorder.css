@@ -1,0 +1,21 @@
+.hotkey-recorder {
+  width: 100%;
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  padding: 8px 11px;
+}
+
+.hotkey-recorder:hover {
+  border-color: var(--border-strong);
+  background: var(--bg-elevated);
+}
+
+.hotkey-recorder.recording {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-soft);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}

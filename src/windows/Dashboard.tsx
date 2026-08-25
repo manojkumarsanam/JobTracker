@@ -9,11 +9,12 @@ import SetupWizard from "../views/SetupWizard";
 import ThemeToggle from "../components/ThemeToggle";
 import Applications from "../views/Applications";
 import Assistant from "../views/Assistant";
+import Help from "../views/Help";
 import Insights from "../views/Insights";
 import Settings from "../views/Settings";
 import "./Dashboard.css";
 
-type Tab = "insights" | "applications" | "assistant" | "settings";
+type Tab = "insights" | "applications" | "assistant" | "help" | "settings";
 
 export default function Dashboard() {
   const [ready, setReady] = useState<boolean | null>(null);
@@ -44,6 +45,7 @@ export default function Dashboard() {
               ["insights", "Insights"],
               ["applications", "Applications"],
               ["assistant", "Assistant"],
+              ["help", "Help"],
               ["settings", "Settings"],
             ] as [Tab, string][]
           ).map(([key, label]) => (
@@ -70,6 +72,7 @@ export default function Dashboard() {
         {tab === "insights" && <Insights />}
         {tab === "applications" && <Applications />}
         {tab === "assistant" && <Assistant />}
+        {tab === "help" && <Help />}
         {tab === "settings" && <Settings />}
       </main>
     </div>
