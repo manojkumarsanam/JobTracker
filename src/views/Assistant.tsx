@@ -41,6 +41,11 @@ export default function Assistant() {
         if (s.ollama_url && s.ollama_model) {
           setModel(s.ollama_model);
           setConnected(true);
+          // Populate the model switcher in the background.
+          api
+            .ollamaModels(savedUrl)
+            .then(setModels)
+            .catch(() => {});
         }
       })
       .catch(() => {});
@@ -84,6 +89,11 @@ export default function Assistant() {
     setConnected(false);
     setModels(null);
     setChat([]);
+  };
+
+  const switchModel = async (next: string) => {
+    setModel(next);
+    await api.setSetting("ollama_model", next);
   };
 
   const ask = async () => {
@@ -161,14 +171,36 @@ export default function Assistant() {
       <div className="assistant-bar">
         <span className="assistant-status">
           <span className="assistant-status-dot" />
-          {model} · local
+          local
         </span>
-        <button onClick={disconnect}>Disconnect</button>
+        <div className="assistant-bar-actions">
+          {models && models.length > 0 ? (
+            <select
+              className="assistant-model-select"
+              value={model}
+              onChange={(e) => switchModel(e.target.value)}
+              title="Switch model"
+            >
+              {models.map((m) => (
+                <option key={m} value={m}>
+                  {m}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <span className="assistant-model-name">{model}</span>
+          )}
+          <button onClick={disconnect}>Disconnect</button>
+        </div>
       </div>
 
       <div className="assistant-chat">
         {chat.length === 0 && (
           <div className="assistant-suggestions">
+            <div className="assistant-msg assistant">
+              Hey! I'm your data assistant — I've got your application
+              history in front of me. Ask me anything about it. 👋
+            </div>
             <p>Try asking:</p>
             {[
               "How many applications did I send this week?",
@@ -186,7 +218,7 @@ export default function Assistant() {
           <div key={i} className={`assistant-msg ${entry.role}`}>
             {entry.role === "assistant" ? (
               <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {entry.text}
+                {entry.text.trim()}
               </ReactMarkdown>
             ) : (
               entry.text

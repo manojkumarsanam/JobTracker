@@ -105,6 +105,7 @@ pub fn run() {
             commands::anomalies::list_anomaly_notes,
             commands::anomalies::save_anomaly_note,
             hotkeys::apply_hotkeys,
+            hotkeys::open_popup,
             hotkeys::close_popup,
         ])
         .run(tauri::generate_context!())
@@ -112,10 +113,8 @@ pub fn run() {
 }
 
 fn setting(conn: &rusqlite::Connection, key: &str) -> Option<String> {
-    conn.query_row(
-        "SELECT value FROM settings WHERE key = ?1",
-        [key],
-        |r| r.get(0),
-    )
+    conn.query_row("SELECT value FROM settings WHERE key = ?1", [key], |r| {
+        r.get(0)
+    })
     .ok()
 }

@@ -8,10 +8,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { save } from "@tauri-apps/plugin-dialog";
 import { api } from "../api";
 import StatusBadge from "../components/StatusBadge";
-import DynamicForm, {
-  valuesFromApplication,
-  type FormValues,
-} from "../components/DynamicForm";
+import DynamicForm from "../components/DynamicForm";
+import { valuesFromApplication, type FormValues } from "../lib/form";
 import DocumentViewer, { type DocSlot } from "../components/DocumentViewer";
 import type { Application, FieldDefinition, Status } from "../types";
 import "./Applications.css";

@@ -61,6 +61,12 @@
   font-weight: 600;
 }
 
+.dashboard-add {
+  padding: 6px 14px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
 .dashboard-credit {
   font-size: 11px;
   letter-spacing: 0.1em;

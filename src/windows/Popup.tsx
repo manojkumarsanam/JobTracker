@@ -6,8 +6,14 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { api } from "../api";
-import DynamicForm, { emptyValues, type FormValues } from "../components/DynamicForm";
-import DocumentAttach, { emptyDoc, type DocValue } from "../components/DocumentAttach";
+import DynamicForm from "../components/DynamicForm";
+import DocumentAttach from "../components/DocumentAttach";
+import {
+  emptyDoc,
+  emptyValues,
+  type DocValue,
+  type FormValues,
+} from "../lib/form";
 import type { Application, DocKind, FieldDefinition } from "../types";
 import "./Popup.css";
 

@@ -27,18 +27,15 @@ pub fn show_popup(app: &AppHandle) {
         let _ = win.set_focus();
         return;
     }
-    let result = WebviewWindowBuilder::new(
-        app,
-        "popup",
-        WebviewUrl::App("index.html#/popup".into()),
-    )
-    .title("Add Application")
-    .inner_size(440.0, 640.0)
-    .resizable(false)
-    .decorations(false)
-    .always_on_top(true)
-    .center()
-    .build();
+    let result =
+        WebviewWindowBuilder::new(app, "popup", WebviewUrl::App("index.html#/popup".into()))
+            .title("Add Application")
+            .inner_size(440.0, 640.0)
+            .resizable(false)
+            .decorations(false)
+            .always_on_top(true)
+            .center()
+            .build();
     if let Err(e) = result {
         eprintln!("failed to create popup window: {e}");
     }
@@ -71,6 +68,12 @@ pub fn register(app: &AppHandle, add: &str, dashboard: &str) -> Result<(), Strin
 #[tauri::command]
 pub fn apply_hotkeys(app: AppHandle, add: String, dashboard: String) -> Result<(), String> {
     register(&app, &add, &dashboard)
+}
+
+/// Open the add-entry popup from the UI (same window the hotkey summons).
+#[tauri::command]
+pub fn open_popup(app: AppHandle) {
+    show_popup(&app);
 }
 
 /// Close the popup window (Esc, or after a successful save).

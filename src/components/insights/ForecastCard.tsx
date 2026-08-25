@@ -4,7 +4,7 @@
  * set, the card shows required pace and on-track status.
  */
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { forecast, type DayPoint } from "../../lib/analytics";
 import Card from "./Card";
 
@@ -27,15 +27,19 @@ export default function ForecastCard({
   const [editing, setEditing] = useState(false);
   const [countInput, setCountInput] = useState("");
   const [deadlineInput, setDeadlineInput] = useState("");
+  const [syncedGoal, setSyncedGoal] = useState<string | undefined>(undefined);
 
-  // Sync with the saved goal whenever it (re)loads: open the editor only
-  // when we know for sure no goal exists yet.
-  useEffect(() => {
-    if (goalCount === undefined) return;
+  // Reset local state when the saved goal (re)loads — the render-time
+  // state-adjustment pattern, so no effect and no cascading renders. The
+  // editor opens only when we know for sure no goal exists yet.
+  const goalSignature =
+    goalCount === undefined ? undefined : `${goalCount ?? ""}|${goalDeadline ?? ""}`;
+  if (goalSignature !== undefined && goalSignature !== syncedGoal) {
+    setSyncedGoal(goalSignature);
     setEditing(goalCount == null);
     setCountInput(goalCount?.toString() ?? "");
     setDeadlineInput(goalDeadline ?? "");
-  }, [goalCount, goalDeadline]);
+  }
 
   if (goalCount === undefined) {
     return (

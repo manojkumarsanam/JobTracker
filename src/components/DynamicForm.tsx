@@ -5,29 +5,14 @@
  */
 
 import { useMemo, useState } from "react";
+import type { FormValues } from "../lib/form";
 import {
   BUILTIN_KEYS,
   parseOptions,
-  type Application,
   type BuiltinKey,
   type FieldDefinition,
 } from "../types";
 import "./DynamicForm.css";
-
-export interface FormValues {
-  builtin: Partial<Record<BuiltinKey, string>>;
-  extra: Record<string, unknown>;
-}
-
-export function emptyValues(): FormValues {
-  return { builtin: {}, extra: {} };
-}
-
-export function valuesFromApplication(app: Application): FormValues {
-  const builtin: Partial<Record<BuiltinKey, string>> = {};
-  for (const key of BUILTIN_KEYS) builtin[key] = String(app[key] ?? "");
-  return { builtin, extra: { ...app.extra } };
-}
 
 interface Props {
   fields: FieldDefinition[];

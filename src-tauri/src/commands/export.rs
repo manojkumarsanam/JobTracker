@@ -102,7 +102,13 @@ pub fn export_csv(path: PathBuf, db: State<Db>) -> Result<(), String> {
     let (header, rows) = collect_rows(conn)?;
 
     let mut out = String::new();
-    out.push_str(&header.iter().map(|h| csv_escape(h)).collect::<Vec<_>>().join(","));
+    out.push_str(
+        &header
+            .iter()
+            .map(|h| csv_escape(h))
+            .collect::<Vec<_>>()
+            .join(","),
+    );
     out.push('\n');
 
     let extra_keys = &header[BUILTIN_COLUMNS.len()..];

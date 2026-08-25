@@ -166,7 +166,8 @@ pub fn list_applications(db: State<Db>) -> Result<Vec<Application>, String> {
         let rows = stmt
             .query_map([], row_to_application)
             .map_err(|e| e.to_string())?;
-        rows.collect::<Result<Vec<_>, _>>().map_err(|e| e.to_string())
+        rows.collect::<Result<Vec<_>, _>>()
+            .map_err(|e| e.to_string())
     })
 }
 
@@ -268,6 +269,7 @@ pub fn list_status_events(id: i64, db: State<Db>) -> Result<Vec<StatusEvent>, St
                 })
             })
             .map_err(|e| e.to_string())?;
-        rows.collect::<Result<Vec<_>, _>>().map_err(|e| e.to_string())
+        rows.collect::<Result<Vec<_>, _>>()
+            .map_err(|e| e.to_string())
     })
 }

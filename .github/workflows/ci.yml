@@ -15,7 +15,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npx tsc --noEmit
+      - run: npm run lint
       - run: npm run build
 
   backend:
@@ -30,6 +30,9 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: src-tauri
-      - name: cargo check
+      - name: cargo fmt
         working-directory: src-tauri
-        run: cargo check --locked
+        run: cargo fmt --check
+      - name: cargo clippy
+        working-directory: src-tauri
+        run: cargo clippy --locked -- -D warnings

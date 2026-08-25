@@ -40,7 +40,8 @@ pub fn list_anomaly_notes(db: State<Db>) -> Result<Vec<AnomalyNote>, String> {
             })
         })
         .map_err(|e| e.to_string())?;
-    rows.collect::<Result<Vec<_>, _>>().map_err(|e| e.to_string())
+    rows.collect::<Result<Vec<_>, _>>()
+        .map_err(|e| e.to_string())
 }
 
 #[tauri::command]

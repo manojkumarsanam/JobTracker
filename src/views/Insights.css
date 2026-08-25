@@ -94,6 +94,108 @@
   grid-column: span 2;
 }
 
+/* Chart slots (customizable grid cells) */
+
+.chart-slot {
+  position: relative;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-slot > .insight-card {
+  flex: 1;
+}
+
+.chart-slot.wide {
+  grid-column: span 2;
+}
+
+.chart-slot.wide > .insight-card.wide {
+  grid-column: auto;
+}
+
+.chart-slot.editing {
+  cursor: grab;
+}
+
+.chart-slot.editing > .insight-card {
+  border-style: dashed;
+  border-color: var(--border-strong);
+}
+
+.chart-slot-controls {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.chart-slot-grip {
+  color: var(--text-faint);
+  font-size: 14px;
+  padding: 0 4px;
+  cursor: grab;
+}
+
+.chart-slot-hide {
+  padding: 0 8px;
+  font-size: 15px;
+  line-height: 1.4;
+  background: var(--bg-inset);
+  color: var(--text-faint);
+}
+
+.chart-slot-hide:hover {
+  color: var(--danger);
+}
+
+/* Insights toolbar */
+
+.insights-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.insights-toolbar-hint {
+  font-size: 11px;
+  color: var(--text-faint);
+  margin-right: auto;
+}
+
+/* Box plot */
+
+.boxplot {
+  width: 100%;
+  height: auto;
+}
+
+.boxplot-whisker {
+  stroke: var(--text-faint);
+  stroke-width: 1.5;
+}
+
+.boxplot-box {
+  fill: var(--accent-soft);
+  stroke: var(--accent);
+  stroke-width: 1.5;
+}
+
+.boxplot-median {
+  stroke: var(--accent);
+  stroke-width: 2.5;
+}
+
+.boxplot-label {
+  font-size: 11px;
+  fill: var(--text-faint);
+}
+
 .insight-card-header {
   display: flex;
   align-items: flex-start;
@@ -500,7 +602,8 @@
     grid-template-columns: 1fr;
   }
 
-  .insight-card.wide {
+  .insight-card.wide,
+  .chart-slot.wide {
     grid-column: span 1;
   }
 }

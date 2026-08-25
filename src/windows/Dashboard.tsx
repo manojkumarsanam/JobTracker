@@ -56,6 +56,13 @@ export default function Dashboard() {
             </button>
           ))}
         </div>
+        <button
+          className="primary dashboard-add"
+          onClick={() => api.openPopup()}
+          title="Log a new application (same as the global hotkey)"
+        >
+          + New Application
+        </button>
         <span className="dashboard-credit">by MJKR</span>
         <ThemeToggle />
       </nav>

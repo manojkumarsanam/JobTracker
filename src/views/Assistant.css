@@ -61,8 +61,20 @@
   margin: 0 0 8px;
 }
 
-.assistant-msg.assistant > :last-child {
+.assistant-msg.assistant > :last-child,
+.assistant-msg.assistant li > :last-child,
+.assistant-msg.assistant blockquote > :last-child {
   margin-bottom: 0;
+}
+
+/* Empty paragraphs and stray breaks from model output take no space. */
+.assistant-msg.assistant p:empty {
+  display: none;
+}
+
+.assistant-msg.assistant > br:last-child,
+.assistant-msg.assistant p > br:last-child {
+  display: none;
 }
 
 .assistant-msg.assistant ul,
@@ -158,6 +170,25 @@
   background: none;
 }
 
+.assistant-bar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.assistant-model-select {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 4px 8px;
+  max-width: 220px;
+}
+
+.assistant-model-name {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
 .assistant-input-row {
   display: flex;
   gap: 8px;
@@ -170,13 +201,19 @@
 /* Suggestions */
 
 .assistant-suggestions {
-  margin: auto;
+  width: 100%;
+  margin: auto 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
   color: var(--text-faint);
   font-size: 12px;
+}
+
+.assistant-suggestions .assistant-msg {
+  align-self: flex-start;
+  margin-bottom: 10px;
 }
 
 .assistant-suggestions button {

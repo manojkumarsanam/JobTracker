@@ -78,5 +78,6 @@ export const api = {
   // Hotkeys / windows
   applyHotkeys: (add: string, dashboard: string) =>
     invoke<void>("apply_hotkeys", { add, dashboard }),
+  openPopup: () => invoke<void>("open_popup"),
   closePopup: () => invoke<void>("close_popup"),
 };

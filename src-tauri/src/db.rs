@@ -141,8 +141,10 @@ fn seed_default_fields(conn: &Connection) -> Result<(), String> {
         .map_err(|e| e.to_string())?;
 
     for (i, (key, label, ftype, options, required)) in defaults.iter().enumerate() {
-        stmt.execute(rusqlite::params![key, label, ftype, options, required, i as i64])
-            .map_err(|e| e.to_string())?;
+        stmt.execute(rusqlite::params![
+            key, label, ftype, options, required, i as i64
+        ])
+        .map_err(|e| e.to_string())?;
     }
     Ok(())
 }

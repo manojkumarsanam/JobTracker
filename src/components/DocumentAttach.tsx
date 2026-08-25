@@ -6,17 +6,9 @@
 
 import { useState } from "react";
 import { open } from "@tauri-apps/plugin-dialog";
+import type { DocValue } from "../lib/form";
 import type { DocKind } from "../types";
 import "./DocumentAttach.css";
-
-export interface DocValue {
-  kind: DocKind | null;
-  tex: string | null;
-  /** Absolute source path of a picked PDF, imported on save. */
-  pdfSource: string | null;
-}
-
-export const emptyDoc: DocValue = { kind: null, tex: null, pdfSource: null };
 
 interface Props {
   label: string;

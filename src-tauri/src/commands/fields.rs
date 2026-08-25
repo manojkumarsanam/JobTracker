@@ -57,7 +57,8 @@ pub fn list_fields(db: State<Db>) -> Result<Vec<FieldDefinition>, String> {
                 })
             })
             .map_err(|e| e.to_string())?;
-        rows.collect::<Result<Vec<_>, _>>().map_err(|e| e.to_string())
+        rows.collect::<Result<Vec<_>, _>>()
+            .map_err(|e| e.to_string())
     })
 }
 

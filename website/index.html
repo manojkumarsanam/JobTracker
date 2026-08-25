@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Job Tracker — your job search, remembered</title>
+  <meta
+    name="description"
+    content="A privacy-first desktop app for tracking job applications: one hotkey to log everything you submitted, real analytics over your search, and an optional local AI assistant. macOS and Windows. Free and open source."
+  />
+  <style>
+    :root {
+      --bg: #0e0e14;
+      --bg-card: #16161f;
+      --bg-inset: #1d1d29;
+      --text: #ececf2;
+      --text-dim: #9a9aab;
+      --accent: #7b8cf0;
+      --accent-deep: #5b6ee8;
+      --green: #39d353;
+      --border: #262634;
+      --radius: 16px;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+    /* Nav */
+    nav {
+      position: sticky; top: 0; z-index: 10;
+      background: rgba(14, 14, 20, 0.8);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      display: flex; align-items: center; gap: 24px;
+      padding: 14px 24px; max-width: 1080px; margin: 0 auto;
+    }
+    .logo {
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 700; font-size: 16px; color: var(--text);
+    }
+    .logo:hover { text-decoration: none; }
+    .logo-mark {
+      width: 28px; height: 28px; border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+      display: grid; place-items: center;
+      font-size: 11px; font-weight: 800; color: #fff;
+      box-shadow: 0 2px 12px rgba(123, 140, 240, 0.4);
+    }
+    .nav-links { margin-left: auto; display: flex; gap: 20px; font-size: 14px; }
+    .nav-links a { color: var(--text-dim); }
+    .nav-links a:hover { color: var(--text); text-decoration: none; }
+
+    /* Hero */
+    .hero {
+      padding: 96px 0 72px;
+      text-align: center;
+      background:
+        radial-gradient(ellipse 60% 50% at 50% -10%, rgba(123, 140, 240, 0.18), transparent),
+        radial-gradient(ellipse 40% 40% at 80% 10%, rgba(57, 211, 83, 0.06), transparent);
+    }
+    .hero h1 {
+      font-size: clamp(36px, 6vw, 60px);
+      font-weight: 800; letter-spacing: -0.03em; line-height: 1.1;
+    }
+    .hero h1 .grad {
+      background: linear-gradient(135deg, var(--accent), #a8b4ff);
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p.lead {
+      margin: 20px auto 0; max-width: 620px;
+      font-size: 18px; color: var(--text-dim);
+    }
+    .hero-cta { margin-top: 36px; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 26px; border-radius: 12px;
+      font-size: 15px; font-weight: 600;
+      transition: transform 120ms ease, box-shadow 120ms ease;
+    }
+    .btn:hover { text-decoration: none; transform: translateY(-1px); }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+      color: #fff; box-shadow: 0 4px 20px rgba(123, 140, 240, 0.35);
+    }
+    .btn-ghost { background: var(--bg-inset); color: var(--text); border: 1px solid var(--border); }
+    .hero-note { margin-top: 14px; font-size: 13px; color: var(--text-dim); }
+
+    /* Fake app window */
+    .demo {
+      margin: 64px auto 0; max-width: 860px;
+      background: var(--bg-card);
+      border: 1px solid var(--border); border-radius: var(--radius);
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+      overflow: hidden; text-align: left;
+    }
+    .demo-titlebar {
+      display: flex; align-items: center; gap: 8px;
+      padding: 12px 16px; border-bottom: 1px solid var(--border);
+    }
+    .dot { width: 11px; height: 11px; border-radius: 50%; }
+    .demo-body { display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; padding: 20px; }
+    .demo-card {
+      background: var(--bg-inset); border: 1px solid var(--border);
+      border-radius: 12px; padding: 14px;
+    }
+    .demo-card h4 { font-size: 12px; color: var(--text-dim); font-weight: 600; margin-bottom: 10px; }
+    .bars { display: flex; align-items: flex-end; gap: 8px; height: 90px; }
+    .bars span {
+      flex: 1; border-radius: 4px 4px 0 0;
+      background: linear-gradient(180deg, var(--accent), var(--accent-deep));
+      animation: grow 900ms ease both;
+    }
+    @keyframes grow { from { height: 0 !important; } }
+    .contrib { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+    .contrib i { aspect-ratio: 1; border-radius: 3px; background: #1c2128; }
+    .contrib i.l1 { background: #0e4429; }
+    .contrib i.l2 { background: #006d32; }
+    .contrib i.l3 { background: #26a641; }
+    .contrib i.l4 { background: #39d353; }
+    .demo-stats { display: flex; gap: 10px; margin-bottom: 16px; }
+    .demo-stat {
+      flex: 1; background: var(--bg-inset); border: 1px solid var(--border);
+      border-radius: 12px; padding: 10px 14px;
+    }
+    .demo-stat b { font-size: 22px; display: block; color: var(--accent); }
+    .demo-stat small { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; }
+
+    /* Sections */
+    section { padding: 80px 0; }
+    .section-title { font-size: 32px; font-weight: 800; letter-spacing: -0.02em; text-align: center; }
+    .section-sub { text-align: center; color: var(--text-dim); margin: 10px auto 48px; max-width: 560px; }
+
+    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
+    .feature {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 24px;
+      transition: border-color 150ms ease, transform 150ms ease;
+    }
+    .feature:hover { border-color: var(--accent-deep); transform: translateY(-2px); }
+    .feature .icon { font-size: 26px; margin-bottom: 12px; display: block; }
+    .feature h3 { font-size: 16px; margin-bottom: 6px; }
+    .feature p { font-size: 14px; color: var(--text-dim); }
+    .feature kbd {
+      font-family: var(--mono); font-size: 12px;
+      background: var(--bg-inset); border: 1px solid var(--border);
+      border-radius: 5px; padding: 1px 6px;
+    }
+
+    /* Steps */
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; counter-reset: step; }
+    .step {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 24px; position: relative;
+    }
+    .step::before {
+      counter-increment: step; content: counter(step);
+      display: grid; place-items: center;
+      width: 30px; height: 30px; border-radius: 50%;
+      background: var(--accent-deep); color: #fff; font-weight: 700; font-size: 14px;
+      margin-bottom: 14px;
+    }
+    .step h3 { font-size: 15px; margin-bottom: 6px; }
+    .step p { font-size: 13px; color: var(--text-dim); }
+
+    /* Privacy banner */
+    .privacy {
+      background: linear-gradient(135deg, rgba(57, 211, 83, 0.07), rgba(123, 140, 240, 0.07));
+      border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 40px; text-align: center;
+    }
+    .privacy h2 { font-size: 24px; margin-bottom: 10px; }
+    .privacy p { color: var(--text-dim); max-width: 640px; margin: 0 auto; }
+    .privacy .green { color: var(--green); font-weight: 600; }
+
+    /* Install */
+    .install-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; }
+    .install-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 26px;
+    }
+    .install-card h3 { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+    .install-card ol { padding-left: 20px; font-size: 14px; color: var(--text-dim); display: grid; gap: 8px; }
+    .install-card code {
+      font-family: var(--mono); font-size: 12.5px;
+      background: var(--bg-inset); border-radius: 6px; padding: 2px 7px;
+    }
+    .uninstall {
+      margin-top: 18px; background: var(--bg-card);
+      border: 1px solid var(--border); border-radius: var(--radius); padding: 26px;
+    }
+    .uninstall h3 { margin-bottom: 10px; }
+    .uninstall p, .uninstall li { font-size: 14px; color: var(--text-dim); }
+    .uninstall ul { padding-left: 20px; display: grid; gap: 6px; margin-top: 8px; }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 0; text-align: center;
+      color: var(--text-dim); font-size: 14px;
+    }
+    footer .credit { font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; font-size: 12px; margin-bottom: 6px; color: var(--text); }
+
+    @media (max-width: 720px) {
+      .demo-body { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a class="logo" href="#top">
+        <span class="logo-mark">JT</span> Job Tracker
+      </a>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#how">How it works</a>
+        <a href="#privacy">Privacy</a>
+        <a href="#install">Install</a>
+        <a href="https://github.com/manojkumarsanam/JobTracker">GitHub</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero" id="top">
+    <div class="wrap">
+      <h1>Your job search,<br /><span class="grad">remembered.</span></h1>
+      <p class="lead">
+        One hotkey logs everything you submitted — the exact resume, the
+        salary you quoted, the portal you used. Real analytics show you how
+        your search is actually going. All of it stays on your machine.
+      </p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="https://github.com/manojkumarsanam/JobTracker/releases/latest">⬇ Download</a>
+        <a class="btn btn-ghost" href="https://github.com/manojkumarsanam/JobTracker">View source</a>
+      </div>
+      <p class="hero-note">Free · Open source (MIT) · macOS &amp; Windows · No account, no cloud</p>
+
+      <div class="demo" aria-hidden="true">
+        <div class="demo-titlebar">
+          <span class="dot" style="background:#ff5f57"></span>
+          <span class="dot" style="background:#febc2e"></span>
+          <span class="dot" style="background:#28c840"></span>
+        </div>
+        <div style="padding: 20px 20px 0">
+          <div class="demo-stats">
+            <div class="demo-stat"><b>7</b><small>today</small></div>
+            <div class="demo-stat"><b>214</b><small>total</small></div>
+            <div class="demo-stat"><b>12</b><small>day streak</small></div>
+          </div>
+        </div>
+        <div class="demo-body">
+          <div class="demo-card">
+            <h4>THIS WEEK</h4>
+            <div class="bars">
+              <span style="height:45%"></span><span style="height:70%"></span>
+              <span style="height:55%"></span><span style="height:90%"></span>
+              <span style="height:65%"></span><span style="height:30%"></span>
+              <span style="height:15%"></span>
+            </div>
+          </div>
+          <div class="demo-card">
+            <h4>MONTHLY VIEW</h4>
+            <div class="contrib">
+              <i></i><i class="l1"></i><i class="l2"></i><i class="l1"></i><i class="l3"></i><i></i><i class="l1"></i>
+              <i class="l2"></i><i class="l4"></i><i class="l2"></i><i class="l1"></i><i></i><i class="l2"></i><i class="l3"></i>
+              <i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="l4"></i><i class="l2"></i><i class="l1"></i><i></i>
+              <i class="l3"></i><i class="l1"></i><i></i><i class="l2"></i><i class="l4"></i><i class="l3"></i><i class="l1"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section id="features">
+    <div class="wrap">
+      <h2 class="section-title">Everything a serious job search needs</h2>
+      <p class="section-sub">
+        Built for people sending hundreds of tailored applications who never
+        want to lose track of what they told which company.
+      </p>
+      <div class="features">
+        <div class="feature">
+          <span class="icon">⌨️</span>
+          <h3>One-hotkey logging</h3>
+          <p>Press <kbd>⌥⇧J</kbd> anywhere — even with the app closed to the tray — and a popup captures company, role, salary, portal, and your documents in seconds.</p>
+        </div>
+        <div class="feature">
+          <span class="icon">📄</span>
+          <h3>LaTeX-smart document storage</h3>
+          <p>Paste your .tex source: kilobytes per entry instead of megabytes, compiled to PDF only when you view it. Prefer PDFs? Attach those instead — your choice, per document.</p>
+        </div>
+        <div class="feature">
+          <span class="icon">📊</span>
+          <h3>A dashboard you design</h3>
+          <p>GitHub-style activity calendar, momentum, forecasts, funnel, portal effectiveness, a world map — hide what you don't need, drag to rearrange, and build your own charts: bar, pie, histogram, box plot, KDE.</p>
+        </div>
+        <div class="feature">
+          <span class="icon">🎯</span>
+          <h3>Goals &amp; forecasts</h3>
+          <p>Set a target — with or without a deadline — and see your projected finish date, the pace you need, and whether you're on track.</p>
+        </div>
+        <div class="feature">
+          <span class="icon">🔁</span>
+          <h3>Status funnel</h3>
+          <p>Applied → Screening → Interview → Offer. Colored badges, hover to update, every transition timestamped for honest response-rate analytics.</p>
+        </div>
+        <div class="feature">
+          <span class="icon">🤖</span>
+          <h3>Local AI assistant</h3>
+          <p>Connect your own Ollama and ask "which portal responds most?" in plain language. Locked to your data — it refuses everything else — and nothing leaves your machine.</p>
+        </div>
+        <div class="feature">
+          <span class="icon">🧩</span>
+          <h3>Your fields, your form</h3>
+          <p>Add, rename, reorder, hide, or require any field. Removing one never deletes the data you already saved.</p>
+        </div>
+        <div class="feature">
+          <span class="icon">📤</span>
+          <h3>One-click export</h3>
+          <p>CSV or Excel with every field you ever used. Your data is never locked in.</p>
+        </div>
+        <div class="feature">
+          <span class="icon">🔍</span>
+          <h3>Anomaly detection</h3>
+          <p>Unusual spikes or drops in your activity get flagged — add your own "why" and it's saved with the data.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="wrap">
+      <h2 class="section-title">How it works</h2>
+      <p class="section-sub">From "I just applied" to "fully recorded" in under ten seconds.</p>
+      <div class="steps">
+        <div class="step">
+          <h3>Apply anywhere</h3>
+          <p>Finish submitting an application on any site, in any browser.</p>
+        </div>
+        <div class="step">
+          <h3>Press the hotkey</h3>
+          <p>The popup appears over whatever you're doing. Fill in the details, paste your .tex or attach the PDF.</p>
+        </div>
+        <div class="step">
+          <h3>Hit save</h3>
+          <p>Entry stored, documents filed, dashboard updated. Back to the search.</p>
+        </div>
+        <div class="step">
+          <h3>Watch the insights</h3>
+          <p>Streaks, forecasts, portal win-rates, and more accumulate automatically as you go.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="privacy">
+    <div class="wrap">
+      <div class="privacy">
+        <h2>🔒 Private by design</h2>
+        <p>
+          <span class="green">No account. No cloud. No telemetry.</span>
+          Everything lives in one SQLite database inside a folder you choose —
+          move the folder and your data moves with it. The optional AI
+          assistant talks only to your own Ollama, normally on localhost.
+          The code is open source, so you don't have to take our word for it.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="install">
+    <div class="wrap">
+      <h2 class="section-title">Install in a minute</h2>
+      <p class="section-sub">
+        Grab the latest installer from
+        <a href="https://github.com/manojkumarsanam/JobTracker/releases/latest">GitHub Releases</a>.
+        The app is unsigned (no $99/yr certificate) — your OS will ask once; here's how to answer.
+      </p>
+      <div class="install-grid">
+        <div class="install-card">
+          <h3> macOS</h3>
+          <ol>
+            <li>Download the <code>.dmg</code> and drag <b>Job Tracker</b> into Applications.</li>
+            <li>First launch: right-click the app → <b>Open</b> → <b>Open</b>. (Or allow it under System Settings → Privacy &amp; Security.) Needed once only.</li>
+            <li>Optional, for .tex previews: <code>brew install tectonic</code></li>
+          </ol>
+        </div>
+        <div class="install-card">
+          <h3>🪟 Windows</h3>
+          <ol>
+            <li>Download and run the <code>.msi</code> installer.</li>
+            <li>If SmartScreen appears: <b>More info → Run anyway</b>. Needed once only.</li>
+            <li>Optional, for .tex previews: <code>winget install TectonicProject.Tectonic</code></li>
+          </ol>
+        </div>
+      </div>
+      <div class="uninstall">
+        <h3>Uninstalling (just as clean)</h3>
+        <p>Job Tracker keeps everything in three places — remove them and it's gone without a trace:</p>
+        <ul>
+          <li><b>The app</b> — macOS: drag it from Applications to Trash · Windows: Settings → Apps → Uninstall.</li>
+          <li><b>Your data folder</b> — the folder you picked at setup (your database and documents). Keep it if you might come back; export to CSV/Excel first if you want a copy.</li>
+          <li><b>App preferences</b> — macOS: <code>~/Library/Application Support/JobTracker</code> · Windows: <code>%APPDATA%\JobTracker</code>. A single small file remembering where your data folder is.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <p class="credit">Created by MJKR</p>
+      <p>
+        Open source under the <a href="https://github.com/manojkumarsanam/JobTracker/blob/main/LICENSE">MIT license</a>
+        · <a href="https://github.com/manojkumarsanam/JobTracker">GitHub</a>
+        · <a href="https://github.com/manojkumarsanam/JobTracker/issues">Report an issue</a>
+      </p>
+    </div>
+  </footer>
+</body>
+</html>
