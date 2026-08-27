@@ -11,6 +11,7 @@ import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { api } from "../api";
+import { sanitizeAssistantText } from "../lib/text";
 import "./Assistant.css";
 
 const DEFAULT_URL = "http://localhost:11434";
@@ -104,7 +105,7 @@ export default function Assistant() {
     setBusy(true);
     try {
       const answer = await api.ollamaAsk(url, model, question);
-      setChat((c) => [...c, { role: "assistant", text: answer }]);
+      setChat((c) => [...c, { role: "assistant", text: sanitizeAssistantText(answer) }]);
     } catch (e) {
       setChat((c) => [...c, { role: "error", text: String(e) }]);
     } finally {
@@ -167,7 +168,7 @@ export default function Assistant() {
   }
 
   return (
-    <div className="assistant">
+    <div className="assistant-view">
       <div className="assistant-bar">
         <span className="assistant-status">
           <span className="assistant-status-dot" />

@@ -38,10 +38,16 @@ interface ReviewRow {
   action: RowAction;
 }
 
+/**
+ * Encode a mapping target to match the <option value> it corresponds to
+ * in the dropdown below. Builtin options are bare keys (value="company");
+ * only custom fields carry a "custom:" prefix — the two must stay in
+ * sync or the <select> can't find a matching option and silently shows
+ * whatever option happens to be first, masking every selection.
+ */
 function targetKey(target: MappingTarget): string {
-  if (target.kind === "builtin" || target.kind === "custom") {
-    return `${target.kind}:${target.key}`;
-  }
+  if (target.kind === "custom") return `custom:${target.key}`;
+  if (target.kind === "builtin") return target.key;
   return target.kind;
 }
 

@@ -37,6 +37,8 @@ export default function Settings() {
   const [fields, setFields] = useState<FieldDefinition[]>([]);
   const [hotkeyAdd, setHotkeyAdd] = useState("");
   const [hotkeyDash, setHotkeyDash] = useState("");
+  const [savedHotkeyAdd, setSavedHotkeyAdd] = useState("");
+  const [savedHotkeyDash, setSavedHotkeyDash] = useState("");
   const [docMode, setDocMode] = useState<DocKind>("tex");
   const [dataDir, setDataDir] = useState("");
   const [texAvailable, setTexAvailable] = useState<boolean | null>(null);
@@ -50,8 +52,12 @@ export default function Settings() {
     api
       .getSettings()
       .then((s) => {
-        setHotkeyAdd(s.hotkey_add ?? "Alt+Shift+J");
-        setHotkeyDash(s.hotkey_dashboard ?? "Alt+Shift+D");
+        const add = s.hotkey_add ?? "Alt+Shift+J";
+        const dash = s.hotkey_dashboard ?? "Alt+Shift+D";
+        setHotkeyAdd(add);
+        setHotkeyDash(dash);
+        setSavedHotkeyAdd(add);
+        setSavedHotkeyDash(dash);
         setDocMode(s.doc_mode === "pdf" ? "pdf" : "tex");
       })
       .catch(() => {});
@@ -129,11 +135,21 @@ export default function Settings() {
       await api.applyHotkeys(hotkeyAdd, hotkeyDash);
       await api.setSetting("hotkey_add", hotkeyAdd);
       await api.setSetting("hotkey_dashboard", hotkeyDash);
+      setSavedHotkeyAdd(hotkeyAdd);
+      setSavedHotkeyDash(hotkeyDash);
       flash("Hotkeys updated.");
     } catch (e) {
       flash(String(e));
     }
   };
+
+  const resetHotkeys = () => {
+    setHotkeyAdd(savedHotkeyAdd);
+    setHotkeyDash(savedHotkeyDash);
+  };
+
+  const hotkeysDirty =
+    hotkeyAdd !== savedHotkeyAdd || hotkeyDash !== savedHotkeyDash;
 
   const saveDocMode = async (mode: DocKind) => {
     setDocMode(mode);
@@ -253,9 +269,15 @@ export default function Settings() {
         </div>
         <p className="settings-help">
           Click a box, then press the key combo you want to use.
+          {hotkeysDirty && " You have unapplied changes."}
         </p>
         <div className="settings-actions">
-          <button className="primary" onClick={saveHotkeys}>
+          {hotkeysDirty && <button onClick={resetHotkeys}>Reset</button>}
+          <button
+            className="primary"
+            disabled={!hotkeysDirty}
+            onClick={saveHotkeys}
+          >
             Apply hotkeys
           </button>
         </div>

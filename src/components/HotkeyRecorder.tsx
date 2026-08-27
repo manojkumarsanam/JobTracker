@@ -40,6 +40,12 @@ function buildShortcut(e: KeyboardEvent): string | null {
   return parts.join("+");
 }
 
+// Only one recorder should ever be listening for keys at a time — if a
+// second box starts recording (or the user clicks anywhere else on the
+// page), the previous one must stop immediately so a stray keypress
+// elsewhere can never be captured as its shortcut.
+let activeStop: (() => void) | null = null;
+
 export default function HotkeyRecorder({ value, onChange }: Props) {
   const [recording, setRecording] = useState(false);
   const boxRef = useRef<HTMLButtonElement>(null);
@@ -47,38 +53,49 @@ export default function HotkeyRecorder({ value, onChange }: Props) {
   useEffect(() => {
     if (!recording) return;
 
+    const stop = () => setRecording(false);
+    activeStop = stop;
+
     const onKeyDown = (e: KeyboardEvent) => {
       e.preventDefault();
       e.stopPropagation();
       if (e.key === "Escape") {
-        setRecording(false);
+        stop();
         return;
       }
       const shortcut = buildShortcut(e);
       if (shortcut) {
         onChange(shortcut);
-        setRecording(false);
+        stop();
       }
     };
 
+    const onOutsideMouseDown = (e: MouseEvent) => {
+      if (!boxRef.current?.contains(e.target as Node)) stop();
+    };
+
     window.addEventListener("keydown", onKeyDown, true);
-    return () => window.removeEventListener("keydown", onKeyDown, true);
+    window.addEventListener("mousedown", onOutsideMouseDown, true);
+    window.addEventListener("blur", stop);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown, true);
+      window.removeEventListener("mousedown", onOutsideMouseDown, true);
+      window.removeEventListener("blur", stop);
+      if (activeStop === stop) activeStop = null;
+    };
   }, [recording, onChange]);
 
-  useEffect(() => {
-    if (!recording) return;
-    const box = boxRef.current;
-    const onBlur = () => setRecording(false);
-    box?.addEventListener("blur", onBlur);
-    return () => box?.removeEventListener("blur", onBlur);
-  }, [recording]);
+  const startRecording = () => {
+    activeStop?.();
+    setRecording(true);
+  };
 
   return (
     <button
       ref={boxRef}
       type="button"
       className={`hotkey-recorder ${recording ? "recording" : ""}`}
-      onClick={() => setRecording(true)}
+      onClick={startRecording}
     >
       {recording ? "Press a key combo…" : formatHotkey(value)}
     </button>
