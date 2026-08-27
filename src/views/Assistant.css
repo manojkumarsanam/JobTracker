@@ -1,4 +1,4 @@
-.assistant {
+.assistant-view {
   height: 100%;
   max-width: 720px;
   margin: 0 auto;
@@ -41,11 +41,19 @@
 }
 
 .assistant-msg {
+  flex-shrink: 0;
   max-width: 82%;
   padding: 10px 14px;
   border-radius: var(--radius-lg);
   font-size: 13px;
   user-select: text;
+}
+
+/* Only the model's own replies get a height cap — a short "hi" you type
+   yourself should never show a scrollbar. */
+.assistant-msg.assistant {
+  max-height: 340px;
+  overflow-y: auto;
 }
 
 .assistant-msg.user {

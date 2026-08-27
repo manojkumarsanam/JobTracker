@@ -30,20 +30,18 @@ pub fn run() {
                     .ok()
             });
 
-            let (add, dash) = match &conn {
-                Some(c) => (
-                    setting(c, "hotkey_add")
-                        .unwrap_or_else(|| hotkeys::DEFAULT_ADD_SHORTCUT.into()),
-                    setting(c, "hotkey_dashboard")
-                        .unwrap_or_else(|| hotkeys::DEFAULT_DASHBOARD_SHORTCUT.into()),
-                ),
-                None => (
-                    hotkeys::DEFAULT_ADD_SHORTCUT.into(),
-                    hotkeys::DEFAULT_DASHBOARD_SHORTCUT.into(),
-                ),
-            };
-            if let Err(e) = hotkeys::register(app.handle(), &add, &dash) {
-                eprintln!("{e}");
+            // Only register global shortcuts for a returning user (setup
+            // already complete). A fresh install must not intercept any
+            // key combo system-wide until the user has actually seen and
+            // confirmed a hotkey in the setup wizard.
+            if let Some(c) = &conn {
+                let add = setting(c, "hotkey_add")
+                    .unwrap_or_else(|| hotkeys::DEFAULT_ADD_SHORTCUT.into());
+                let dash = setting(c, "hotkey_dashboard")
+                    .unwrap_or_else(|| hotkeys::DEFAULT_DASHBOARD_SHORTCUT.into());
+                if let Err(e) = hotkeys::register(app.handle(), &add, &dash) {
+                    eprintln!("{e}");
+                }
             }
 
             app.manage(Db(Mutex::new(conn)));
