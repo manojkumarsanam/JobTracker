@@ -222,14 +222,6 @@ pub async fn ollama_ask(
         .json()
         .await
         .map_err(|e| format!("unexpected response from Ollama: {e}"))?;
-    // Temporary diagnostic: {:?} escapes control/invisible characters so
-    // whatever the model is actually padding replies with becomes visible
-    // in the terminal, instead of guessing blind. Remove once identified.
-    eprintln!(
-        "[assistant debug] raw reply ({} chars): {:?}",
-        chat.message.content.chars().count(),
-        chat.message.content
-    );
     Ok(clean_answer(&chat.message.content))
 }
 
@@ -254,7 +246,9 @@ fn is_visually_blank(line: &str) -> bool {
     }
     let is_bare_marker = matches!(trimmed, "-" | "*" | "+" | ">")
         || (trimmed.ends_with('.') || trimmed.ends_with(')'))
-            && trimmed[..trimmed.len() - 1].chars().all(|c| c.is_ascii_digit())
+            && trimmed[..trimmed.len() - 1]
+                .chars()
+                .all(|c| c.is_ascii_digit())
             && trimmed.len() > 1;
     is_bare_marker
 }
